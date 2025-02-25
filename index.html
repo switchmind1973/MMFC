@@ -8,23 +8,41 @@
         /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            background-image: url('https://drive.google.com/uc?export=view&id=16RJzoCI9VWah2KVW73Nr-60Yh1_XE7fJ'); /* Your company logo */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Blurred overlay for the background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            filter: blur(10px); /* Blur effect */
+            z-index: -1;
         }
 
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         h1, h2 {
@@ -124,7 +142,7 @@
                 <div id="dropdown" class="dropdown-content hidden"></div>
             </div>
 
-            <label for="containerNo">Container No.:</label>
+            <label for="containerNo">CV No. / CLIENT / REF. No.:</label> <!-- Updated label -->
             <input type="text" id="containerNo" required>
 
             <label for="qtyCs">Qty (cs):</label>
