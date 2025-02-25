@@ -101,10 +101,12 @@
             padding: 10px;
             cursor: pointer;
             border-bottom: 1px solid #eee;
+            text-align: left; /* Align text to the left */
         }
 
-        .dropdown-item:hover {
-            background: #f1f1f1;
+        .dropdown-item.selected {
+            background-color: #007bff;
+            color: white;
         }
     </style>
 </head>
@@ -186,7 +188,7 @@
         window.onload = fetchItemDescriptions;
 
         // Handle search-as-you-type
-        document.getElementById('itemDescription').addEventListener('input', function() {
+        document.getElementById('itemDescription').addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
             const dropdown = document.getElementById('dropdown');
             dropdown.innerHTML = '';
@@ -194,11 +196,11 @@
             if (searchTerm) {
                 const filteredItems = window.itemList.filter(item => item.toLowerCase().includes(searchTerm));
                 if (filteredItems.length > 0) {
-                    filteredItems.forEach(item => {
+                    filteredItems.forEach((item, index) => {
                         const itemElement = document.createElement('div');
                         itemElement.className = 'dropdown-item';
                         itemElement.textContent = item;
-                        itemElement.onclick = function() {
+                        itemElement.onclick = function () {
                             document.getElementById('itemDescription').value = item;
                             dropdown.classList.add('hidden');
                         };
@@ -214,9 +216,51 @@
         });
 
         // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const dropdown = document.getElementById('dropdown');
             if (!event.target.matches('#itemDescription')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Keyboard navigation for dropdown
+        document.getElementById('itemDescription').addEventListener('keydown', function (event) {
+            const dropdown = document.getElementById('dropdown');
+            const items = dropdown.getElementsByClassName('dropdown-item');
+            let selectedIndex = -1;
+
+            // Find the currently selected item
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].classList.contains('selected')) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+
+            // Handle arrow keys
+            if (event.key === 'ArrowDown') {
+                event.preventDefault(); // Prevent cursor movement in the input field
+                if (selectedIndex < items.length - 1) {
+                    if (selectedIndex !== -1) {
+                        items[selectedIndex].classList.remove('selected');
+                    }
+                    selectedIndex++;
+                    items[selectedIndex].classList.add('selected');
+                    items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                }
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault(); // Prevent cursor movement in the input field
+                if (selectedIndex > 0) {
+                    if (selectedIndex !== -1) {
+                        items[selectedIndex].classList.remove('selected');
+                    }
+                    selectedIndex--;
+                    items[selectedIndex].classList.add('selected');
+                    items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                }
+            } else if (event.key === 'Enter' && selectedIndex !== -1) {
+                event.preventDefault(); // Prevent form submission
+                document.getElementById('itemDescription').value = items[selectedIndex].textContent;
                 dropdown.classList.add('hidden');
             }
         });
@@ -251,15 +295,15 @@
                 headers: { 'Content-Type': 'application/json' },
                 mode: 'no-cors'
             })
-            .then(() => {
-                alert('Data saved successfully!');
-                document.getElementById('inventoryForm').reset();
-                updateFields(); // Hide conditional fields after reset
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to save data.');
-            });
+                .then(() => {
+                    alert('Data saved successfully!');
+                    document.getElementById('inventoryForm').reset();
+                    updateFields(); // Hide conditional fields after reset
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to save data.');
+                });
         }
     </script>
 </body>
