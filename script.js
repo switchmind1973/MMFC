@@ -3,7 +3,7 @@ function fetchItemDescriptions() {
     fetch('https://script.google.com/macros/s/AKfycbw2DfYi93h-cj34iKrbr3AYbRZfQ_y9QjOiJaO_MJyAdw51yvAyxGdH24boRSMYPqjn/exec?action=getItems')
         .then(response => response.json())
         .then(items => {
-            window.itemList = items; // Store items globally
+            window.itemList = items;
         })
         .catch(error => {
             console.error('Error fetching item descriptions:', error);
@@ -65,7 +65,7 @@ document.getElementById('itemDescription').addEventListener('keydown', function 
 
     // Handle arrow keys
     if (event.key === 'ArrowDown') {
-        event.preventDefault(); // Prevent cursor movement in the input field
+        event.preventDefault();
         if (selectedIndex < items.length - 1) {
             if (selectedIndex !== -1) {
                 items[selectedIndex].classList.remove('selected');
@@ -75,7 +75,7 @@ document.getElementById('itemDescription').addEventListener('keydown', function 
             items[selectedIndex].scrollIntoView({ block: 'nearest' });
         }
     } else if (event.key === 'ArrowUp') {
-        event.preventDefault(); // Prevent cursor movement in the input field
+        event.preventDefault();
         if (selectedIndex > 0) {
             if (selectedIndex !== -1) {
                 items[selectedIndex].classList.remove('selected');
@@ -85,7 +85,7 @@ document.getElementById('itemDescription').addEventListener('keydown', function 
             items[selectedIndex].scrollIntoView({ block: 'nearest' });
         }
     } else if (event.key === 'Enter' && selectedIndex !== -1) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
         document.getElementById('itemDescription').value = items[selectedIndex].textContent;
         dropdown.classList.add('hidden');
     }
@@ -98,21 +98,29 @@ function updateFields() {
     document.getElementById('issuanceFields').classList.toggle('hidden', transactionType !== 'ISSUANCE');
 }
 
+// Function to show toast notification
+function showToast(message, isSuccess = true) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.style.backgroundColor = isSuccess ? '#28a745' : '#dc3545';
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
 // Submit form data
 function submitForm() {
-    // Get the current date and time
     const now = new Date();
-    const timestamp = now.toLocaleString(); // Format: "MM/DD/YYYY, HH:MM:SS AM/PM"
+    const timestamp = now.toLocaleString();
 
-    // Format the Date field as "Month Day, Year" (e.g., February 25, 2025)
     const date = new Date(document.getElementById('date').value);
     const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Format the Production Date field as "DD-MMM-YYYY" (e.g., 25-Feb-2025)
     const productionDate = new Date(document.getElementById('productionDate').value);
     const formattedProductionDate = productionDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-');
 
-    // Add the formatted dates and timestamp to the form data
     const formData = {
         date: formattedDate,
         itemDescription: document.getElementById('itemDescription').value,
@@ -127,10 +135,9 @@ function submitForm() {
         iirNo: document.getElementById('iirNo').value,
         docsRefNoIssuance: document.getElementById('docsRefNoIssuance').value,
         productionDate: formattedProductionDate,
-        timestamp: timestamp // Add the timestamp to the form data
+        timestamp: timestamp
     };
 
-    // Send the form data to Google Apps Script
     fetch('https://script.google.com/macros/s/AKfycbw2DfYi93h-cj34iKrbr3AYbRZfQ_y9QjOiJaO_MJyAdw51yvAyxGdH24boRSMYPqjn/exec', {
         method: 'POST',
         body: JSON.stringify(formData),
@@ -138,12 +145,12 @@ function submitForm() {
         mode: 'no-cors'
     })
         .then(() => {
-            alert('Data saved successfully!');
+            showToast('Data saved successfully!', true);
             document.getElementById('inventoryForm').reset();
-            updateFields(); // Hide conditional fields after reset
+            updateFields();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to save data.');
+            showToast('Failed to save data.', false);
         });
 }
