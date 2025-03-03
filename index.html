@@ -217,7 +217,7 @@
     <script>
         // Fetch item descriptions from Google Apps Script
         function fetchItemDescriptions() {
-            fetch('https://script.google.com/macros/s/AKfycbwuEG-ndcYdgQRLriR7aEqFPCKm09_ASbSV7y6CSsKln1thEXYy1tqqCftNYyzb_T5hJg/exec?action=getItems')
+            fetch('https://script.google.com/macros/s/AKfycbwqDeKAt2qDqxz7-G7Nlm1LOT6nLjJpTFBLgKlJbfzTejo8n0oxlIYD8hg2lTbSj1OEUQ/exec?action=getItems')
                 .then(response => response.json())
                 .then(items => {
                     window.itemList = items; // Store items globally
@@ -348,7 +348,7 @@
             };
 
             // Send the form data to Google Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbwuEG-ndcYdgQRLriR7aEqFPCKm09_ASbSV7y6CSsKln1thEXYy1tqqCftNYyzb_T5hJg/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbwqDeKAt2qDqxz7-G7Nlm1LOT6nLjJpTFBLgKlJbfzTejo8n0oxlIYD8hg2lTbSj1OEUQ/exec', {
                 method: 'POST',
                 body: JSON.stringify(formData),
                 headers: { 'Content-Type': 'application/json' },
