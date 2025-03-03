@@ -147,9 +147,8 @@ button:hover {
     padding: 16px;
     position: fixed;
     z-index: 1000;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 20px; /* Position at the top */
+    right: 20px; /* Position at the right */
     font-size: 14px;
     opacity: 0;
     transition: opacity 0.5s, visibility 0.5s;
